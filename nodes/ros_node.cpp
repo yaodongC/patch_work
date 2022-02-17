@@ -20,6 +20,7 @@ std::string output_filename;
 std::string acc_filename, pcd_savepath;
 string      algorithm;
 string      input_topic_name;
+string      output_topic_name;
 string      mode;
 string      seq;
 bool        save_flag;
@@ -36,7 +37,7 @@ pcl::PointCloud<T> cloudmsg2cloud(sensor_msgs::PointCloud2 cloudmsg)
 }
 
 template<typename T>
-sensor_msgs::PointCloud2 cloud2msg(pcl::PointCloud<T> cloud, std::string frame_id = "rslidar_front")
+sensor_msgs::PointCloud2 cloud2msg(pcl::PointCloud<T> cloud, std::string frame_id = "base_link")
 {
     sensor_msgs::PointCloud2 cloud_ROS;
     pcl::toROSMsg(cloud, cloud_ROS);
@@ -65,13 +66,14 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "Benchmark");
     ros::NodeHandle nh;
     nh.param<string>("/algorithm", algorithm, "patchwork");
-    nh.param<string>("/ground_seg_input_topic", input_topic_name, "/rslidar_points_front/ROI");
+    nh.param<string>("/ground_seg_input_topic", input_topic_name, "/sensing/top/lidar/points_raw");
+    nh.param<string>("/ground_seg_output_topic", output_topic_name, "/sensing/lidar/no_ground/pointcloud");
     ros::Rate loop_rate(10);
 
     PatchworkGroundSeg.reset(new PatchWork<PointType>(&nh));
 
     PositivePublisher     = nh.advertise<sensor_msgs::PointCloud2>("/ground_segmentation/ground_cloud", 100);
-    NegativePublisher     = nh.advertise<sensor_msgs::PointCloud2>("/ground_segmentation/obstacle_cloud", 100);
+    NegativePublisher     = nh.advertise<sensor_msgs::PointCloud2>(output_topic_name, 100);
     
     ros::Subscriber subLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>(input_topic_name, 10, callbackNode);
     

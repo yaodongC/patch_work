@@ -3,6 +3,7 @@
 <node name="$(anon ros_kitti)" pkg="patchwork" type="ros_node" output="screen">
 <rosparam param="/algorithm">"patchwork"</rosparam> 
 <rosparam param="/ground_seg_input_topic">"/sensing/top/lidar/points_raw"</rosparam>  
+<rosparam param="/ground_seg_output_topic">"/sensing/lidar/no_ground/pointcloud"</rosparam>  
 </node>
 
 <!--
