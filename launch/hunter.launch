@@ -1,0 +1,15 @@
+<launch>
+
+<node name="$(anon ros_kitti)" pkg="patchwork" type="ros_node" output="screen">
+<rosparam param="/algorithm">"patchwork"</rosparam> 
+<rosparam param="/ground_seg_input_topic">"/sensing/top/lidar/points_raw"</rosparam>  
+</node>
+
+<!--
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find patchwork)/rviz/patchwork_viz.rviz"/>
+-->
+
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find patchwork)/rviz/rviz_patchwork_ringroad.rviz"/>
+
+<rosparam command="load" file="$(find patchwork)/config/params_hunter_roughterrin.yaml" />
+</launch>
